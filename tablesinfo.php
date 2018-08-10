@@ -1,0 +1,74 @@
+<?php
+include_once 'config.php';
+
+if(!empty($_GET['name'])){
+	$table = strip_tags($_GET['name']);   
+}	
+$columns = $pdo->query("DESCRIBE $table");		
+$res = $columns->fetchAll(PDO::FETCH_ASSOC); 
+
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == 'delete') {
+        $name = ($_POST['field']);
+        $pdo->exec("ALTER TABLE $table DROP COLUMN $name");
+    }
+}
+
+if (isset($_POST['add_new_name'])) {
+    $name = ($_POST['name']);
+    $new_name = strip_tags($_POST['new_name']);
+    $type = ($_POST['type']);
+    $pdo->exec("ALTER TABLE $table CHANGE $name $new_name $type");
+}
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Управление таблицами и базами данных</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<?php
+    if (isset($_POST['action'])) : ?>
+    <form method="post">
+        <input type="hidden" name="name" value="<?=$_POST['field']?>">
+        <input type="hidden" name="type" value="<?=$_POST['type']?>">
+            <?php if ($_POST['action'] == 'edit') : ?>
+            <input type="text" name="new_name" value="<?= $_POST['field'] ?>">
+            <input type="submit" name="add_new_name" value="Изменить название поля">
+    </form>
+            <?php endif; ?>
+    <?php endif; ?>
+<h2>Таблица <?=$table?></h2>
+<table>
+    <thead>
+        <tr>
+            <th>Поле</th>
+            <th>Тип</th>
+            <th>Удалить поле</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($res as $result) : ?>
+        <tr>
+            <td><?=$result['Field']?></td>
+            <td><?=$result['Type']?></td>
+            <td>
+                <form method="post">
+                    <input type="hidden" name="field" value="<?= $result['Field'] ?>">
+                    <input type="hidden" name="type" value="<?= $result['Type'] ?>">
+                    <select name="action">
+                        <option value="delete">Удалить</option>
+                        <option value="edit">Изменить</option>
+                    </select>
+                    <input type="submit" value="Выполнить">
+                </form>
+            </td>
+        </tr>
+    <?php endforeach; ?>       
+    </tbody>
+</table>
+<p><a href="index.php">Назад к списку таблиц</a></p>
+</body>
+</html>
