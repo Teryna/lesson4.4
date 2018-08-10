@@ -46,7 +46,7 @@ if (isset($_POST['add_new_name'])) {
         <tr>
             <th>Поле</th>
             <th>Тип</th>
-            <th>Удалить поле</th>
+            <th>Действие</th>
         </tr>
     </thead>
     <tbody>
