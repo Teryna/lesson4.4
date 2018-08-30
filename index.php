@@ -1,5 +1,5 @@
 <?php 
-error_reporting (E_ALL);
+//error_reporting (E_ALL);
 include_once 'config.php';
 if (!empty($_POST['description'])) {
     $name = $_POST['description'];
@@ -43,7 +43,7 @@ $result = $pdo->query("SHOW TABLES");
         while ($row = $result->fetch(PDO::FETCH_NUM)) :  
             foreach ($row as $rows) : ?>
             <tr>
-                <td><?php echo '<a href="tablesinfo.php?name='.$row[0].'">'.$row[0].'</a>'.'</br>';?></td>
+                <td><?='<a href="tablesinfo.php?name='.$rows.'">'.$rows.'</a>'.'</br>';?></td>
             </tr>
             <?php endforeach; ?>
         <?php endwhile; ?>
